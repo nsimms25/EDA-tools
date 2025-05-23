@@ -55,9 +55,8 @@ def my_std_stat(dataframe):
 
     sq_diffs = sum((x - func_mean) ** 2 for x in values)
     variance = sq_diffs / (func_count - 1)
-    
-    return variance ** 0.5
 
+    return variance ** 0.5
 
 #TODO: 
 #2. Outlier Detection
