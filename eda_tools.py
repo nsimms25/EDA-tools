@@ -60,8 +60,26 @@ def my_std_stat(dataframe):
 
 #TODO: 
 #2. Outlier Detection
-#    Z-score based
 #    IQR based
+
+def z_score_series(dataframe, threshold=3):
+    """
+    Find the zscore and outliers for a pandas series, hence series in function name.
+    """
+
+    data = dataframe.iloc[:, 0]
+    values = pd.to_numeric(data, errors='coerce').dropna()
+
+    mean = data.mean()
+    stddev = data.std()
+
+    z_scores = (data - mean) / stddev
+
+    outliers = data[abs(z_scores) > threshold]
+
+    return outliers
+
+
 
 #TODO: 
 #3. Correlation Matrix with Visual
@@ -90,9 +108,8 @@ def get_summary_stats(dataframe):
         kurtosis=dataframe.kurt()
     )
 
-#print(get_summary_stats(crop_recommend_df.drop("label", axis = 1)))
-
-#Test my fucntion against the Pandas mean() fucntion and compare if the results match.
-print("My mean function: \n", my_mean(test_df))
-print("Pandas built in mean function: \n", test_df.mean())
+#Test my function against the Pandas mean() function and compare if the results match.
+#print("My mean function: \n", my_mean(test_df))
+#print("Pandas built in mean function: \n", test_df.mean())
 #Results match the builtin Pandas function.
+
