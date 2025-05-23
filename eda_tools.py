@@ -11,7 +11,7 @@ def my_mean(dataframe):
         dataframe (DataFrame): Pandas DataFrame 
     
     Returns:
-        Mean (int): mean statistic for the dataframe input.
+        Mean (float): mean statistic for the dataframe input.
     """
     df_shape = dataframe.shape
     row_count = df_shape[0]
