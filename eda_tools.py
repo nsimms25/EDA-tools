@@ -2,6 +2,20 @@ import pandas as pd
 import numpy as np
 import scipy.stats
 
+def my_count(dataframe):
+    count = len(dataframe)
+    return count
+
+def my_sum(dataframe):
+    row_count = dataframe.shape[0]
+    func_count = my_count(dataframe)
+
+    sum = 0
+    for row in range(row_count):
+        sum += dataframe.loc[row]
+    
+    return pd.to_numeric(sum)
+
 def my_mean(dataframe):
     """
     This is my own creation for mean, this will not be useful over pandas or numpy.
@@ -13,16 +27,13 @@ def my_mean(dataframe):
     Returns:
         Mean (float): mean statistic for the dataframe input.
     """
-    df_shape = dataframe.shape
-    row_count = df_shape[0]
-    column_count = df_shape[1]
-    count = 0 
-    sum = 0
-    for i in range(row_count):
-        count += 1
-        sum += dataframe.loc[i]
-    
-    return sum / count 
+    row_count = dataframe.shape[0]
+    func_count = my_count(dataframe)
+    func_sum = my_sum(dataframe)
+
+    mean = func_sum / func_count
+
+    return mean
 
 def my_std_stat(dataframe):
     """
@@ -35,7 +46,17 @@ def my_std_stat(dataframe):
     Returns:
         std (float): std statistic for the dataframe input.
     """
+    row_count = dataframe.shape[0]
+    func_count = my_count(dataframe)
+    func_mean = my_mean(dataframe)
 
+    df = dataframe.iloc[:, 0]
+    values = pd.to_numeric(df, errors='coerce').dropna()
+
+    sq_diffs = sum((x - func_mean) ** 2 for x in values)
+    variance = sq_diffs / (func_count - 1)
+    
+    return variance ** 0.5
 
 
 #TODO: 
