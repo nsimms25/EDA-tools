@@ -58,10 +58,6 @@ def my_std_stat(dataframe):
 
     return variance ** 0.5
 
-#TODO: 
-#2. Outlier Detection
-#    IQR based
-
 def z_score_series(dataframe, threshold=3):
     """
     Find the zscore and outliers for a pandas series, hence series in function name.
@@ -79,6 +75,24 @@ def z_score_series(dataframe, threshold=3):
 
     return outliers
 
+def iqr_series(dataframe):
+    data = pd.to_numeric(dataframe.iloc[:, 0], errors='coerce').dropna()
+
+    Q1 = data.quantile(0.25)
+    Q3 = data.quantile(0.75)
+    IQR = Q3 - Q1
+
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+
+    outliers = data[(data < lower_bound) | (data > upper_bound)]
+
+    return outliers
+
+#TODO: Do these for multiple column df..
+#1. Z-score
+#2. Outlier Detection
+#    IQR based
 
 
 #TODO: 
