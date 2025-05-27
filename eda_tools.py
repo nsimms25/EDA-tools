@@ -122,11 +122,6 @@ def iqr_mulit(dataframe):
 
     return outliers
 
-#TODO: Do these for multiple column df.
-#2. Outlier Detection
-#    IQR based
-
-
 #TODO: 
 #3. Correlation Matrix with Visual
 
