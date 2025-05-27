@@ -122,6 +122,16 @@ def iqr_mulit(dataframe):
 
     return outliers
 
+def add_outlier_mask_column(dataframe, outliers):
+    result_dataframe = dataframe.copy()
+
+    for column, outlier_series in outliers.items():
+        outlier_mask = dataframe.index.isin(outlier_series.index)
+        result_dataframe[f"{column}_outlier"] = outlier_mask
+    
+    return result_dataframe
+
+
 #TODO: 
 #3. Correlation Matrix with Visual
 
@@ -165,3 +175,7 @@ z_scores = z_score_multi(crop_recommend_df, threshold=4)
 iqr_data = iqr_mulit(crop_recommend_df)
 #Uncomment to show z_scores for  "ph" column.
 #print(iqr_data["temperature"])
+
+#Use mask function to return a copy of the Dataframe with outlier mask column.
+new_df = add_outlier_mask_column(crop_recommend_df, z_scores)
+#print(new_df.head())
