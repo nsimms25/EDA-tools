@@ -105,9 +105,24 @@ def z_score_multi(dataframe, threshold=3):
 
     return outliers
 
+def iqr_mulit(dataframe):
+    numeric_df = dataframe.select_dtypes(include='number')  #numeric columns
+    outliers = {}
 
-#TODO: Do these for multiple column df..
-#1. Z-score
+    for column in numeric_df.columns:
+        data = pd.to_numeric(dataframe[column], errors='coerce').dropna()
+        Q1 = data.quantile(0.25)
+        Q3 = data.quantile(0.75)
+        IQR = Q3 - Q1
+
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+
+        outliers[column] = dataframe.loc[(dataframe[column] < lower_bound) | (dataframe[column] > upper_bound), column]
+
+    return outliers
+
+#TODO: Do these for multiple column df.
 #2. Outlier Detection
 #    IQR based
 
@@ -144,9 +159,14 @@ def get_summary_stats(dataframe):
 #print("Pandas built in mean function: \n", test_df.mean())
 #Results match the builtin Pandas function.
 
-#This is for mulit columne z-scores:
+#This is for mulit column z-scores:
 #Now the z_scores can be called base on the column needed. 
 z_scores = z_score_multi(crop_recommend_df, threshold=4)
 #Uncomment to show z_scores for  "ph" column.
 #print(z_scores["ph"])
 
+#This is for mulit column IQR:
+#Now the IQR can be called base on the column needed. 
+iqr_data = iqr_mulit(crop_recommend_df)
+#Uncomment to show z_scores for  "ph" column.
+#print(iqr_data["temperature"])
