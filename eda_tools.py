@@ -131,9 +131,39 @@ def add_outlier_mask_column(dataframe, outliers):
     
     return result_dataframe
 
+def get_corr_matrix(dataframe):
+    matrix = dataframe.corr(numeric_only = True)
+
+    return matrix
+
+#Time to create a Correlation Matrix by hand without using the Pandas builtin function.
+def my_corr_matrix(dataframe):
+    numeric_df = dataframe.select_dtypes(include='number')
+    columns = numeric_df.columns
+    num = len(columns)
+
+    corr_df = pd.DataFrame(np.zeros((num, num)), columns=columns, index=columns)
+
+    for i in range(num):
+        for j in range(num):
+            x = numeric_df[columns[i]]
+            y = numeric_df[columns[j]]
+
+            x_mean = x.mean()
+            y_mean = y.mean()
+
+            sum_deviations = sum((x - x_mean) * (y - y_mean))
+            product_std_deviations = np.sqrt(sum((x - x_mean) ** 2)) * np.sqrt(sum((y - y_mean) ** 2))
+
+            correlation = sum_deviations / product_std_deviations if product_std_deviations != 0 else np.nan
+            corr_df.iloc[i, j] = correlation
+    
+    return corr_df.round(3)
 
 #TODO: 
 #3. Correlation Matrix with Visual
+#   Bonus: Spearman or Kendall?
+
 
 #TODO:
 #4. Pairplot & Distributions
@@ -179,3 +209,7 @@ iqr_data = iqr_mulit(crop_recommend_df)
 #Use mask function to return a copy of the Dataframe with outlier mask column.
 new_df = add_outlier_mask_column(crop_recommend_df, z_scores)
 #print(new_df.head())
+
+#Compare the builtin correlation matrix from Pandas to a built from scratch one.
+print(get_corr_matrix(crop_recommend_df))
+print(my_corr_matrix(crop_recommend_df))
