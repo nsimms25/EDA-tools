@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import scipy.stats
+from pprint import pprint
 
 def my_count(dataframe):
     count = len(dataframe)
@@ -89,6 +90,22 @@ def iqr_series(dataframe):
 
     return outliers
 
+def z_score_multi(dataframe, threshold=3):
+    numeric_df = dataframe.select_dtypes(include='number')  #numeric columns
+    outliers = {}
+
+    for column in numeric_df.columns:
+        data = pd.to_numeric(dataframe[column], errors='coerce').dropna()
+        column_mean = data.mean()
+        column_stddev = data.std()
+
+        z_scores_col = (data - column_mean) / column_stddev
+
+        outliers[column] = dataframe.loc[abs(z_scores_col) > threshold, column]
+
+    return outliers
+
+
 #TODO: Do these for multiple column df..
 #1. Z-score
 #2. Outlier Detection
@@ -126,4 +143,10 @@ def get_summary_stats(dataframe):
 #print("My mean function: \n", my_mean(test_df))
 #print("Pandas built in mean function: \n", test_df.mean())
 #Results match the builtin Pandas function.
+
+#This is for mulit columne z-scores:
+#Now the z_scores can be called base on the column needed. 
+z_scores = z_score_multi(crop_recommend_df, threshold=4)
+#Uncomment to show z_scores for  "ph" column.
+#print(z_scores["ph"])
 
