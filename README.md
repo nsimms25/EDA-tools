@@ -7,8 +7,11 @@ Created Mean, Sum, StdDev as practice.
 # Outliers
 Created Z-Score and Inter Quartile Range (IQR) for both Series and multi column data.
 
+# Correlation Matrix
+Created functions to return Pearson, Spearman, and Kendall correlation matrices. 
+Includes pandas pre-build as well as my own created functions. 
+
 # TODO:
-    Correlation Matrix with Visual
     Pairplot & Distributions
         Use sns.pairplot()
         sns.histplot() or sns.kdeplot() for each numerical feature
