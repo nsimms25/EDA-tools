@@ -245,10 +245,11 @@ def my_kendall_corr_matrix(df):
 
     return corr_df.round(2)
 
-#TODO: 
-#3. Correlation Matrix with Visual
-#   Bonus: Spearman or Kendall?
-
+def my_pairplot(dataframe):
+    sns.pairplot(dataframe, hue=None, corner=True, diag_kind="kde", height=1, aspect=1)
+    plt.tight_layout()
+    plt.suptitle("Pairplot", y=0.9)
+    plt.show()
 
 #TODO:
 #4. Pairplot & Distributions
@@ -309,3 +310,6 @@ new_df = add_outlier_mask_column(crop_recommend_df, z_scores)
 #Compare the builtin correlation matrix from Pandas to a built from scratch one.
 #print(get_kendall_corr_matrix(crop_recommend_df))
 #print(my_kendall_corr_matrix(crop_recommend_df)) #This will take a while due to df size.
+
+#Create a pairplot from seaborn and matplotlib.
+my_pairplot(crop_recommend_df)
