@@ -1,7 +1,10 @@
 import pandas as pd
 import numpy as np
 import scipy.stats
+from scipy.stats import rankdata
 from pprint import pprint
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def my_count(dataframe):
     count = len(dataframe)
@@ -160,6 +163,88 @@ def my_corr_matrix(dataframe):
     
     return corr_df.round(3)
 
+def visualize_corr_matrix(corr_matrix):
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(
+        corr_matrix, 
+        annot=True, 
+        cmap='coolwarm', 
+        center=0, 
+        square=True, 
+        linewidths=0.5, 
+        fmt=".2f"
+    )
+    plt.title("Correlation Matrix")
+    plt.xticks(rotation=45)
+    plt.yticks(rotation=0)
+    plt.tight_layout()
+    plt.show()
+
+def get_spearman_corr_matrix(dataframe):
+    matrix = dataframe.corr(numeric_only = True, method = "spearman", )
+
+    return matrix
+
+def my_spearman_corr_matrix(dataframe):
+    numeric = dataframe.select_dtypes(include='number')
+    columns = numeric.columns
+    nums = len(columns)
+    corr_df = pd.DataFrame(np.zeros((nums, nums)), columns=columns, index=columns)
+
+    for i in range(nums):
+        for j in range(nums):
+            x = rankdata(numeric.iloc[:, i])
+            y = rankdata(numeric.iloc[:, j])
+
+            x_mean = np.mean(x)
+            y_mean = np.mean(y)
+
+            numerator = np.sum((x - x_mean) * (y - y_mean))
+            denominator = np.sqrt(np.sum((x - x_mean)**2)) * np.sqrt(np.sum((y - y_mean)**2))
+
+            corr = numerator / denominator if denominator != 0 else np.nan
+            corr_df.iloc[i, j] = corr
+        
+    return corr_df.round(3)
+
+def get_kendall_corr_matrix(dataframe):
+    matrix = dataframe.corr(numeric_only = True, method = "kendall", )
+
+    return matrix
+
+def get_kendall_tau(x, y):
+    n = len(x)
+    concordant = discordant = 0
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            a = x[i] - x[j]
+            b = y[i] - y[j]
+            prod = a * b
+            if prod > 0:
+                concordant += 1
+            elif prod < 0:
+                discordant += 1
+            # Ignore ties
+
+    total_pairs = n * (n - 1) / 2
+    tau = (concordant - discordant) / total_pairs if total_pairs != 0 else np.nan
+    return tau
+
+def my_kendall_corr_matrix(df):
+    numeric_df = df.select_dtypes(include='number')
+    cols = numeric_df.columns
+    n = len(cols)
+    corr_df = pd.DataFrame(np.zeros((n, n)), columns=cols, index=cols)
+
+    for i in range(n):
+        for j in range(n):
+            x = numeric_df.iloc[:, i].to_numpy()
+            y = numeric_df.iloc[:, j].to_numpy()
+            corr_df.iloc[i, j] = get_kendall_tau(x, y)
+
+    return corr_df.round(2)
+
 #TODO: 
 #3. Correlation Matrix with Visual
 #   Bonus: Spearman or Kendall?
@@ -211,5 +296,16 @@ new_df = add_outlier_mask_column(crop_recommend_df, z_scores)
 #print(new_df.head())
 
 #Compare the builtin correlation matrix from Pandas to a built from scratch one.
-print(get_corr_matrix(crop_recommend_df))
-print(my_corr_matrix(crop_recommend_df))
+#print(get_corr_matrix(crop_recommend_df))
+#print(my_corr_matrix(crop_recommend_df))
+
+#Create a heatmap of the correlation matrix.
+#visualize_corr_matrix(get_corr_matrix(crop_recommend_df))
+
+#Compare the builtin correlation matrix from Pandas to a built from scratch one.
+#print(get_spearman_corr_matrix(crop_recommend_df))
+#print(my_spearman_corr_matrix(crop_recommend_df))
+
+#Compare the builtin correlation matrix from Pandas to a built from scratch one.
+#print(get_kendall_corr_matrix(crop_recommend_df))
+#print(my_kendall_corr_matrix(crop_recommend_df)) #This will take a while due to df size.
