@@ -12,9 +12,6 @@ Created functions to return Pearson, Spearman, and Kendall correlation matrices.
 Includes pandas pre-build as well as my own created functions. 
 
 # TODO:
-    Pairplot & Distributions
-        Use sns.pairplot()
-        sns.histplot() or sns.kdeplot() for each numerical feature
     Extras
         Profiling report export (like pandas-profiling or ydata-profiling)
         Categorical variable summaries (value counts, mode, entropy)
