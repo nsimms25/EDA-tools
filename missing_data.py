@@ -7,6 +7,10 @@ import numpy as np
 import matplotlib as plt
 import seaborn as sns
 
+#Import dataset
+platform_data_df = pd.read_csv(filepath_or_buffer="datasets/clv_data.csv")
+#print(platform_data_df.head())
+
 def missing_summary(dataframe):
     """
     Function to return a missing data summary for a dataframe.
