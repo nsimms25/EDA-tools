@@ -6,7 +6,7 @@ Accepts two or more groups or categorical data as input.
 Automatically selects and performs the correct statistical test.
 Outputs p-values, test statistics, confidence intervals, and a decision on the null hypothesis.
 Optionally generates visualizations and a PDF/HTML report.
-    
+
 Parametric vs non-parametric tests
 Types of errors (Type I, II)
 Assumptions of tests
